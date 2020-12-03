@@ -20,7 +20,6 @@ fn next_move(slope: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> std::r
         next_x -= map[0].len();
     }
     let next_y = loc[0] + slope[1];
-    //println!("{:?}", loc);
 
     check_if_valid([next_y, next_x], map)
 }
@@ -28,7 +27,6 @@ fn next_move(slope: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> std::r
 fn recursion(count: u16, iteration: u16, slope: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> (u16, u16) {
     match next_move(slope, loc, map) {
         Err(_) => {
-            //println!("{}", e);
             (count, iteration)
         }
         Ok(next_loc) => {
