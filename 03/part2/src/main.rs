@@ -9,20 +9,7 @@ const SLOPES: [[usize; 2]; 5] = [
     [1, 2]
 ];
 
-
-fn check_if_valid([row, col]: [usize; 2], map: &Vec<Vec<char>>) -> std::result::Result<[usize; 2], &str> {
-    match map.get(row) {
-        None => Err("y out of bounds"),
-        Some(v) => {
-            match v.get(col) {
-                None => Err("x out of bounds"),
-                Some(_) => Ok([row, col])
-            }
-        }
-    }
-}
-
-fn next_move([row_move, col_move]: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> std::result::Result<[usize; 2], &str> {
+fn next_move([row_move, col_move]: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> [usize; 2]{
     let mut next_x = loc[1] + row_move;
     // if next_x goes out of bounds, yeet back to start
     if next_x >= map[0].len() {
@@ -30,21 +17,19 @@ fn next_move([row_move, col_move]: [usize; 2], loc: [usize; 2], map: &Vec<Vec<ch
     }
     let next_y = loc[0] + col_move;
 
-    check_if_valid([next_y, next_x], map)
+    [next_y, next_x]
 }
 
 fn recursion(count: u16, iteration: u16, slope: [usize; 2], loc: [usize; 2], map: &Vec<Vec<char>>) -> (u16, u16) {
-    match next_move(slope, loc, map) {
-        Err(_) => {
-            (count, iteration)
+    let next_loc = next_move(slope, loc, map);
+    if next_loc[0] < map.len() {
+        match map[next_loc[0]][next_loc[1]] {
+            '#' => recursion(count + 1, iteration + 1, slope, next_loc, map),
+            '.' => recursion(count, iteration + 1, slope, next_loc, map),
+            _ => panic!("character is neither '#' or '.'")
         }
-        Ok(next_loc) => {
-            match map[next_loc[0]][next_loc[1]] {
-                '#' => recursion(count + 1, iteration + 1, slope, next_loc, map),
-                '.' => recursion(count, iteration + 1, slope, next_loc, map),
-                _ => panic!("character is neither '#' or '.'")
-            }
-        }
+    } else {
+        (count, iteration)
     }
 }
 
