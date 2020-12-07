@@ -1,10 +1,3 @@
-def unique(it):
-        s = set()
-        for el in it:
-            if el not in s:
-                s.add(el)
-                yield el
-
 with open("./input.txt", "r") as f:
     groups = [i.split("\n") for i in f.read().split("\n\n")]
     sum_count = 0
